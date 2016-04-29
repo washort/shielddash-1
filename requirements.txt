@@ -4,3 +4,6 @@ gunicorn==19.4.5
 psycopg2==2.6.1
 dj-database-url==0.4.0
 python-decouple==3.0
+django-googleauth==2.1
+PyJWT==0.4.1
+requests==2.5.1

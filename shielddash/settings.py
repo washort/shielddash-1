@@ -31,18 +31,54 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
+DOMAIN = config('DOMAIN', default='localhost:8000')
 
-# Application definition
+STATIC_ROOT = config('STATIC_ROOT', default=os.path.join(BASE_DIR, 'static'))
+STATIC_URL = config('STATIC_URL', '/static/')
 
 INSTALLED_APPS = [
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.staticfiles',
+
+    'django.contrib.admin',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+
+    'rest_framework',
+    'googleauth',
     'shielddash.api',
 ]
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'shielddash.middleware.CORSMiddleware'
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
+                'shielddash.api.context_processors.google_auth_key',
+            ],
+        }
+    }
 ]
 
 ROOT_URLCONF = 'shielddash.urls'
@@ -76,10 +112,16 @@ USE_L10N = False
 
 USE_TZ = False
 
+AUTHENTICATION_BACKENDS = (
+    'googleauth.backends.GoogleAuthBackend',
+)
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
 }
+
+GOOGLEAUTH_CLIENT_ID = config('GOOGLEAUTH_CLIENT_ID', '676697640342-o9mhtndrj60dk7jksdmmunetfmuqng4q.apps.googleusercontent.com')
+GOOGLEAUTH_CLIENT_SECRET = config('GOOGLEAUTH_CLIENT_SECRET', '_HoDDGIq_ZrhBiES-ozIhUgh')
+GOOGLEAUTH_APPS_DOMAIN = 'mozilla.com'
+GOOGLEAUTH_CALLBACK_DOMAIN = DOMAIN
+GOOGLEAUTH_USE_HTTPS = (DOMAIN != 'localhost:8000')
+LOGIN_REDIRECT_URL = '/retention?start=20160101&end=20160102'

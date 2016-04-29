@@ -1,5 +1,5 @@
 from rest_framework.exceptions import ParseError
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,8 +8,7 @@ from shielddash.api.forms import Form
 
 
 class RetentionView(APIView):
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def perform_authentication(self, request):
         pass
